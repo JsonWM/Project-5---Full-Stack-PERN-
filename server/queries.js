@@ -6,13 +6,10 @@ const { request } = require('express');
 const POOL = require('pg').Pool;
 
 const pool = new POOL({
-    user: process.env.DB_USER,
-    host: process.env.DB_HOST,
-    database: process.env.DB_NAME,
-    password: process.env.DB_PASSWORD,
-    port: process.env.DB_PORT
+    connectionString: process.env.DATABASE_URL, ssl: {
+        rejectUnauthorized: false
+    }
 });
-
 // Create all the functions that will be our request handlers in our express server 
 
 // CREATE 
@@ -20,11 +17,11 @@ const createLink = (req, res) => {
     const name = req.body.name;
     const URL = req.body.URL;
 
-    pool.query('INSERT INTO links (name, URL) VALUES ($1, $2)', [name, URL], (error, results) => {
+    pool.query('INSERT INTO links (name, URL) VALUES ($1, $2) RETURNING id', [name, URL], (error, results) => {
         if (error) {
             throw error;
         }
-        res.status(201).send(`Success, link added with ID: ${results.insertId}`)
+        res.status(201).send(`Success, link added with ID: ${results.rows[0].id}`)
     })
 }
 
@@ -51,7 +48,7 @@ const updateLink = (req, res) => {
             if (error){
                 throw error;
             } 
-            res.status(201).send(`Link modified with ID: ${results.insertId}`);
+            res.status(201).send(`Link modified with ID: ${id}`);
         }
     )
 }
@@ -65,7 +62,7 @@ const deleteLink = (req, res) => {
 
     pool.query('DELETE FROM links WHERE id = $1', [id], (error, results) => {
         if (error) throw error;
-        res.status(201).send(`Link deleted with ID: ${results.insertId}`);
+        res.status(201).send(`Link deleted with ID: ${id}`);
     })
 }
 
