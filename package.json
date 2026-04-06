@@ -3,10 +3,10 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
- "scripts": {
-  "start": "node server/index.js",
-  "build": "npm install --prefix Project-3---My-Favorite-Links && npm run build --prefix Project-3---My-Favorite-Links"
-},
+  "scripts": {
+    "start": "node server/index.js",
+    "build": "npm install --prefix Project-3---My-Favorite-Links && npm run build --prefix Project-3---My-Favorite-Links"
+  },
   "keywords": [],
   "author": "",
   "license": "ISC",
