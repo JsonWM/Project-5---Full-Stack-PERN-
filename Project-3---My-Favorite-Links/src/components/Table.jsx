@@ -4,7 +4,7 @@ function TableHeader() {
             <tr>
                 <th className="px-5 border-bottom-0">Name</th>
                 <th className="px-5 border-bottom-0">Url</th>
-                <th className="px-5 border-bottom-0">Remove</th>
+                <th className="px-5 border-bottom-0"><span>Update</span><span className="ms-4">Remove</span></th>
             </tr>
         </thead>
     );
