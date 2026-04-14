@@ -19,6 +19,7 @@ function TableBody(props) {
                     <a href={d.url} target="_blank">{d.url}</a>
                 </td>
                 <td className="text-center">
+                    <button onClick={() => props.onEdit(d)} className="btn btn-warning me-2">Update</button>
                     <button onClick={() => props.remover(d.id)} className="btn btn-danger">Remove</button>
                 </td>
             </tr>
@@ -50,7 +51,7 @@ function Table(props) {
             <div className="col-12 col-md-8">
                 <table className="table table-hover text-center mt-6">
                     <TableHeader></TableHeader>
-                    <TableBody data={props.data} remover={props.remover}></TableBody>
+                    <TableBody data={props.data} onEdit={props.onEdit} remover={props.remover}></TableBody>
                 </table>
 
             </div>

@@ -5,31 +5,31 @@ import { useEffect } from "react";
 
 
 
-const LinkContainer=()=>{
+const LinkContainer = () => {
 
     const [formData, setForData] = useState([]);
+    const [linkToEdit, setLinkToEdit] = useState(null);
 
     const fetchLinks = async () => {
         try {
             const response = await fetch('/links');
             console.log(response);
             let data = await response.json();
-            console.log(data);            
-            setForData(data); 
+            console.log(data);
+            setForData(data);
         } catch (error) {
             console.error(error);
-        }        
+        }
     }
     useEffect(() => {
         fetchLinks()
     }, [])
 
-    const postLink = async (data) =>{
-        
-        try{
-            let response = await fetch('/new',{
-                method:'POST',
-                headers:{
+    const postLink = async (data) => {
+        try {
+            let response = await fetch('/new', {
+                method: 'POST',
+                headers: {
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify(data)
@@ -38,45 +38,62 @@ const LinkContainer=()=>{
             let message = response.text();
             console.log(message);
             fetchLinks();
-        }catch(error){
+        } catch (error) {
             console.log(error);
         }
-    }     
+    }
 
     // Getting values from Form.jsx
     let formArr = (data) => {
 
         postLink(data);
     }
+    // Update link
+    const updateLink = async (id, updatedData) => {
+        try {
+            await fetch(`/update/${id}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(updatedData)
+            });
+            setLinkToEdit(null);
+            fetchLinks();
+        } catch (error) {
+            console.error("Error al actualizar:", error);
+        }
+    }
+
     // Remove a specific element from (formData)
     const removeButton = async (id) => {
-        try{
+        try {
             await fetch(`/remove/${id}`, {
-                method:'DELETE'
+                method: 'DELETE'
             })
             fetchLinks();
 
-        }catch(error){
+        } catch (error) {
             console.log(error);
         }
-        
-        
+
+
     }
 
 
     return (
         <div>
-            
+
             <h1 className="text-center" >Favorite Links</h1>
-           
+
             <p className="lead text-center text-muted">Add a new <label htmlFor="linkName"> <u>link name</u></label> and <label htmlFor="linkUrl"> <u>URL name </u></label> to your Table!</p>
 
-            <Form linkData={formArr} ></Form>
-           
+            <Form linkData={postLink} editData={linkToEdit} onUpdate={updateLink}/>           
+
             <div className="lead text-center text-muted">
                 <h2>Your links!</h2>
             </div>
-            <Table data={formData} remover={removeButton}></Table>
+            <Table data={formData} onEdit={(link)=>setLinkToEdit(link)} remover={removeButton}></Table>
         </div>
     );
 }

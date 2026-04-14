@@ -1,9 +1,16 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 function Form(props) {
 
     let [linkName, setLname] = useState("");
     let [linkUrl, setLUrl] = useState("");
+
+        useEffect(() => {
+        if (props.editData) {
+            setLname(props.editData.name);
+            setLUrl(props.editData.url);
+        }
+    }, [props.editData]);
 
     // linkName value
     let handleLinkName = (event) => {
@@ -20,7 +27,11 @@ function Form(props) {
         if(!linkName || !linkUrl){
             alert("(Link name) and (Link Url) are required");
         }else{
-            props.linkData({ name:linkName, URL:linkUrl });
+            if(props.editData){
+                props.onUpdate(props.editData.id, { name: linkName, URL: linkUrl });
+            }else{
+                props.linkData({ name:linkName, URL:linkUrl });
+            }
             setLname("");
             setLUrl("");
             event.target.reset();
@@ -35,15 +46,16 @@ function Form(props) {
             <div className="row justify-content-center">
                 <div className="col-12 col-md-6 ">
                     <form onSubmit={newSubmission} className="p-3 ">
+                        <h3>{props.editData ? "Editing Link" : "Add New Link"}</h3>
                         {/* linkName */}
                         <label htmlFor="linkName">Link name</label>
                         <br />
-                        <input type="text" id="linkName" name="linkName" className="form-control mb-2" onChange={handleLinkName} />
+                        <input type="text" id="linkName" name="linkName" className="form-control mb-2" value={linkName} onChange={handleLinkName} />
                         <br />
                         {/* linkUrl */}
                         <label htmlFor="linkUrl">Link URL</label>
                         <br />
-                        <input type="text" id="linkUrl" name="linkUrl" className="form-control mb-3" onChange={handleLinkUrl} />
+                        <input type="text" id="linkUrl" name="linkUrl" className="form-control mb-3" value={linkUrl} onChange={handleLinkUrl} />
                         <br />
                         {/* Submit button */}
                         
